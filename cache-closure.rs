@@ -3,7 +3,7 @@ use std::hash::Hash;
 use std::collections::hash_map::Entry;
 use std::fmt::Debug;
 
-struct Cacher< T, P, R>
+struct Cacher<T, P, R>
     where T: Fn(P) -> R {
     function: T,
     cache: HashMap<P, R>
@@ -52,6 +52,5 @@ fn main () {
     println!("{:?}", soma.value(&[10, 12]));
     println!("{:?}", soma.value(&[10, 13]));
 
-    soma.print_cache();    
-        
+    soma.print_cache();
 }
