@@ -10,7 +10,9 @@ struct Cacher<T, P, R>
 }
 
 impl<T, P, R> Cacher<T, P, R> 
-    where P: Eq + Hash + Clone + Debug, R: Debug, T: Fn(P) -> R {
+    where P: Eq + Hash + Clone + Debug, 
+        R: Debug + Clone, 
+        T: Fn(P) -> R {
 
     fn new(function : T) -> Cacher<T, P, R> {
         Cacher {
@@ -19,10 +21,10 @@ impl<T, P, R> Cacher<T, P, R>
         }
     }
 
-    fn value (&mut self, param : P) -> &mut R {
+    fn value (&mut self, param : P) -> R {
         match self.cache.entry(param.clone()) {
-            Entry::Occupied(o) => o.into_mut(),
-            Entry::Vacant(v) => v.insert((self.function)(param))
+            Entry::Occupied(o) => o.into_mut().clone(),
+            Entry::Vacant(v) => v.insert((self.function)(param)).clone()
         }
     }
 
@@ -48,9 +50,9 @@ fn main () {
         res
     });
 
-    println!("{:?}", soma.value(&[10, 11]));
-    println!("{:?}", soma.value(&[10, 12]));
-    println!("{:?}", soma.value(&[10, 13]));
+    let r10_11 = soma.value(&[10, 11]);
+    let r11_12 = soma.value(&[10, 11]);
 
-    soma.print_cache();
+    println!("{} {}", r10_11, r11_12);
+ 
 }
