@@ -2,11 +2,12 @@ use std::collections::HashMap;
 use std::hash::Hash;
 use std::collections::hash_map::Entry;
 use std::fmt::Debug;
+use std::rc::Rc;
 
 pub struct Cacher<T, P, R>
     where T: Fn(P) -> R {
     function: T,
-    cache: HashMap<P, R>
+    cache: HashMap<P, Rc<R>>
 }
 
 impl<T, P, R> Cacher<T, P, R> 
@@ -21,10 +22,10 @@ impl<T, P, R> Cacher<T, P, R>
         }
     }
 
-    pub fn value (&mut self, param : P) -> R {
+    pub fn value (&mut self, param : P) -> Rc<R> {
         match self.cache.entry(param.clone()) {
-            Entry::Occupied(o) => o.into_mut().clone(),
-            Entry::Vacant(v) => v.insert((self.function)(param)).clone()
+            Entry::Occupied(o) => Rc::clone(&o.into_mut()),
+            Entry::Vacant(v) => Rc::clone(&v.insert(Rc::new((self.function)(param))))
         }
     }
 

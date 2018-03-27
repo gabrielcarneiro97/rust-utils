@@ -15,7 +15,11 @@ mod tests {
             }
             res
         });
-        assert_eq!(soma.value(&[10, 11]), 21);
+
+        let s11_10 = soma.value(&[10, 11]);
+        let s11_12 = soma.value(&[12, 11]);
+        println!("{:?}", s11_10);
+        println!("{:?}", s11_12);
         soma.print_cache();
     }
 }
