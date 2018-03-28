@@ -12,7 +12,7 @@ pub struct Cacher<T, P, R>
 
 impl<T, P, R> Cacher<T, P, R> 
     where P: Eq + Hash + Clone + Debug, 
-        R: Debug + Clone, 
+        R: Debug, 
         T: Fn(P) -> R {
 
     pub fn new(function : T) -> Cacher<T, P, R> {
